@@ -6,10 +6,22 @@
   <% end %>
 </ul>
 
-<%= render 'bookmarks/form' %>
-
-<p><%= link_to "Add new", new_list_bookmark_path(@list) %></p>
 <p><%= link_to "Back", root_path %></p>
+
+<div class="container py-5">
+  <div class="row">
+    <div class="col-12 col-md-6 offset-lg-3">
+      <div class="bg-white rounded p-3 shadow">
+        <h3>Add a movie to your <%= @list.name %> list</h3>
+        <%= simple_form_for [@list, @bookmark] do |f| %>
+          <%= f.association :movie, prompt: "Select a movie", input_html: {data: { controller: "tom-select"}} %>
+          <%= f.input :comment, placeholder: 'Enter a comment about the movie' %>
+          <%= f.submit class: "btn btn-flat" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
 
 <h3>Reviews</h3>
   <% if @list.reviews.empty? %>
@@ -27,4 +39,13 @@
   <% end %>
 </div>
 
-<p><%= link_to "Add a review", new_list_review_path(@list) %></p>
+<div class="col-12 col-sm-6">
+  <div class="bg-white rounded p-3">
+    <h5>Add your review</h5>
+    <%= simple_form_for ([@list, @review]) do |f| %>
+      <%= f.input :comment, placeholder: "Add your review here..." %>
+      <%= f.input :rating, as: :select, collection: (1..5), required: true, label: false, input_html: { data: { controller: "star-rating" } } %>
+      <%= f.submit class: "btn btn-flat mt-2" %>
+    <% end %>
+  </div>
+</div>
