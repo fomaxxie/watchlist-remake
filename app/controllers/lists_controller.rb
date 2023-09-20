@@ -11,11 +11,17 @@ class ListsController < ApplicationController
 
   def create
     @list = List.new(list_params)
-    @list.save
+    if @list.save
+      redirect_to list_path(@list)
+    else
+      render :new, status: :unprocessable_entity
+    end
     redirect_to list_path(@list)
   end
 
   def show
+    @bookmark = Bookmark.new(list: @list)
+    @review = Review.new(list: @list)
   end
 
   def edit
@@ -28,7 +34,7 @@ class ListsController < ApplicationController
 
   def destroy
     @list.destroy
-    redirect_to root_path
+    redirect_to root_path, status: :see_other
   end
 
   private
@@ -38,6 +44,6 @@ class ListsController < ApplicationController
   end
 
   def list_params
-    params.require(:list).permit(:name)
+    params.require(:list).permit(:name, :photo)
   end
 end
